@@ -1,0 +1,80 @@
+/* Estilos generales */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1f2937;
+}
+
+/* Fondo del header */
+header {
+  background-color: #dbeafe;
+}
+
+/* Enlaces */
+a {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+/* Pestaña activa */
+nav a[aria-current="page"] {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* Resto de enlaces */
+nav a:not([aria-current="page"]) {
+  color: #64748b;
+}
+
+/* Hover */
+nav a:hover {
+  color: #1e293b;
+}
+
+/* Foco del teclado */
+nav a:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Lista de navegación */
+nav > ul {
+  list-style: none;
+  padding: 0;
+}
+
+/* Primera tarjeta después del título */
+h2 + .card {
+  border-top: 2px solid #2563eb;
+}
+
+/* Tarjetas */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+/* Ocultar badges vacíos */
+.badge:empty {
+  display: none;
+}
+
+/* Resaltar tarjetas que tienen un badge con texto */
+article:has(.badge:not(:empty)) {
+  border-color: #2563eb;
+}
+
+/* Botones con aria-label */
+button[aria-label] {
+  cursor: pointer;
+}
+
+/* Agrupar selectores */
+.card :is(h2, h3, p) {
+  margin: 0;
+}
+
+/* Agrupar encabezados */
+:where(h1, h2, h3) {
+  margin-block: 0.5em;
+}
