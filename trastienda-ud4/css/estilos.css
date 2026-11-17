@@ -1,80 +1,95 @@
-/* Estilos generales */
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  color: #1f2937;
+/* UD4 · Cascada, especificidad y herencia
+   Orden de prioridad entre capas: utilities > components > base.
+*/
+@layer base, components, utilities;
+
+/* 1. Estilos generales y heredables */
+@layer base {
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1f2937;
+    line-height: 1.5;
+  }
+
+  header {
+    background-color: #dbeafe;
+  }
+
+  /* Los enlaces del header heredan el color del contenedor. */
+  header a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a {
+    color: #1d4ed8;
+    text-decoration: none;
+  }
+
+  nav > ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  /* :where() aporta especificidad cero. */
+  :where(h1, h2, h3) {
+    margin-block: 0.5em;
+  }
 }
 
-/* Fondo del header */
-header {
-  background-color: #dbeafe;
+/* 2. Estilos de componentes y estados */
+@layer components {
+  /* El atributo aria-current aporta especificidad de clase. */
+  nav a[aria-current="page"] {
+    color: #2563eb;
+    font-weight: 700;
+  }
+
+  nav a:not([aria-current="page"]) {
+    color: #64748b;
+  }
+
+  nav a:hover {
+    color: #1e293b;
+  }
+
+  nav a:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  /* Solo afecta a la primera tarjeta inmediatamente posterior al h2. */
+  h2 + .card {
+    border-top: 2px solid #2563eb;
+  }
+
+  .card {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+  }
+
+  .badge:empty {
+    display: none;
+  }
+
+  /* :has() permite seleccionar la tarjeta que contiene un badge con texto. */
+  article:has(.badge:not(:empty)) {
+    border-color: #2563eb;
+  }
+
+  button[aria-label] {
+    cursor: pointer;
+  }
+
+  /* :is() toma la especificidad de su argumento más específico. */
+  .card :is(h2, h3, p) {
+    margin: 0;
+  }
 }
 
-/* Enlaces */
-a {
-  color: #1d4ed8;
-  text-decoration: none;
-}
-
-/* Pestaña activa */
-nav a[aria-current="page"] {
-  color: #2563eb;
-  font-weight: 700;
-}
-
-/* Resto de enlaces */
-nav a:not([aria-current="page"]) {
-  color: #64748b;
-}
-
-/* Hover */
-nav a:hover {
-  color: #1e293b;
-}
-
-/* Foco del teclado */
-nav a:focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 2px;
-}
-
-/* Lista de navegación */
-nav > ul {
-  list-style: none;
-  padding: 0;
-}
-
-/* Primera tarjeta después del título */
-h2 + .card {
-  border-top: 2px solid #2563eb;
-}
-
-/* Tarjetas */
-.card {
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
-}
-
-/* Ocultar badges vacíos */
-.badge:empty {
-  display: none;
-}
-
-/* Resaltar tarjetas que tienen un badge con texto */
-article:has(.badge:not(:empty)) {
-  border-color: #2563eb;
-}
-
-/* Botones con aria-label */
-button[aria-label] {
-  cursor: pointer;
-}
-
-/* Agrupar selectores */
-.card :is(h2, h3, p) {
-  margin: 0;
-}
-
-/* Agrupar encabezados */
-:where(h1, h2, h3) {
-  margin-block: 0.5em;
+/* 3. Capa reservada para utilidades.
+   Las reglas de esta capa prevalecerán sobre components y base
+   cuando entren en conflicto, aunque tengan menor especificidad.
+*/
+@layer utilities {
 }
