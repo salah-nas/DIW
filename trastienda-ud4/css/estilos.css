@@ -1,80 +1,194 @@
-/* UD4 · Cascada, especificidad y herencia
-   Orden de prioridad entre capas: utilities > components > base.
+/* UD4 · Cascada, especificidad, herencia, variables, color moderno y nesting
+   Orden de prioridad: utilities > components > base.
 */
 @layer base, components, utilities;
 
-/* 1. Estilos generales y heredables */
+/* 1. TOKENS DE DISEÑO: escalas de color y variables semánticas */
+:root {
+  /* Escala primaria */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #2563eb;
+  --color-primary-600: #1d4ed8;
+  --color-primary-700: #1d40af;
+  --color-primary-800: #1e3a8a;
+  --color-primary-900: #172554;
+
+  /* Escala neutra */
+  --color-neutral-50: #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+
+  /* Tokens semánticos */
+  --bg-page: var(--color-neutral-50);
+  --bg-card: #ffffff;
+  --text-main: var(--color-neutral-900);
+  --text-muted: var(--color-neutral-500);
+  --border-subtle: var(--color-neutral-200);
+  --brand: var(--color-primary-500);
+  --brand-hover: var(--color-primary-600);
+
+  /* Color moderno OKLCH para badges y elementos destacados */
+  --color-accent-oklch: oklch(0.62 0.19 255);
+  --color-accent-hover: oklch(0.54 0.19 255);
+
+  --radius-card: 12px;
+  --radius-badge: 4px;
+}
+
+/* 2. Estilos base y propiedades heredables */
 @layer base {
   body {
+    margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    color: #1f2937;
+    color: var(--text-main);
+    background-color: var(--bg-page);
     line-height: 1.5;
   }
 
   header {
-    background-color: #dbeafe;
+    background-color: var(--color-primary-100);
   }
 
-  /* Los enlaces del header heredan el color del contenedor. */
   header a {
     color: inherit;
     text-decoration: none;
   }
 
   a {
-    color: #1d4ed8;
+    color: var(--brand);
     text-decoration: none;
   }
 
-  nav > ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  /* :where() aporta especificidad cero. */
   :where(h1, h2, h3) {
     margin-block: 0.5em;
   }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+  }
 }
 
-/* 2. Estilos de componentes y estados */
+/* 3. Componentes: cascada, especificidad y anidamiento nativo */
 @layer components {
-  /* El atributo aria-current aporta especificidad de clase. */
-  nav a[aria-current="page"] {
-    color: #2563eb;
-    font-weight: 700;
+  nav {
+    background-color: var(--bg-card);
+    border-top: 1px solid var(--border-subtle);
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    a {
+      color: var(--text-muted);
+      text-decoration: none;
+
+      &[aria-current="page"] {
+        color: var(--brand);
+        font-weight: 700;
+      }
+
+      &:hover {
+        color: var(--text-main);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+      }
+    }
   }
 
-  nav a:not([aria-current="page"]) {
-    color: #64748b;
-  }
-
-  nav a:hover {
-    color: #1e293b;
-  }
-
-  nav a:focus-visible {
-    outline: 2px solid #2563eb;
-    outline-offset: 2px;
-  }
-
-  /* Solo afecta a la primera tarjeta inmediatamente posterior al h2. */
   h2 + .card {
-    border-top: 2px solid #2563eb;
+    border-top: 2px solid var(--brand);
   }
 
-  .card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
+  article.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-card);
+
+    &:hover {
+      border-color: var(--brand);
+    }
+
+    h3 {
+      color: var(--text-main);
+      font-size: 1.1rem;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+
+    /* Autor y descripción */
+    p {
+      color: var(--text-muted);
+      margin-block: 0.5rem;
+    }
+
+    /* Precio: el último párrafo de la tarjeta */
+    p:last-of-type {
+      color: var(--brand);
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: var(--color-primary-50);
+      color: var(--color-primary-800);
+      padding: 4px 8px;
+      border-radius: var(--radius-badge);
+      font-size: 0.75rem;
+      font-weight: 600;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    /* Botones de acción de la tarjeta */
+    button {
+      background-color: var(--color-accent-oklch);
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      padding: 0.6rem 0.9rem;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--color-accent-hover);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--brand);
+        outline-offset: 2px;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
-  .badge:empty {
-    display: none;
-  }
-
-  /* :has() permite seleccionar la tarjeta que contiene un badge con texto. */
+  /* :has() selecciona tarjetas que contienen una etiqueta con contenido. */
   article:has(.badge:not(:empty)) {
-    border-color: #2563eb;
+    border-color: var(--brand);
   }
 
   button[aria-label] {
@@ -83,13 +197,11 @@
 
   /* :is() toma la especificidad de su argumento más específico. */
   .card :is(h2, h3, p) {
-    margin: 0;
+    margin-block: 0.5rem;
   }
 }
 
-/* 3. Capa reservada para utilidades.
-   Las reglas de esta capa prevalecerán sobre components y base
-   cuando entren en conflicto, aunque tengan menor especificidad.
-*/
+/* 4. Capa reservada para utilidades.
+   Las reglas de esta capa prevalecen sobre components y base. */
 @layer utilities {
 }
